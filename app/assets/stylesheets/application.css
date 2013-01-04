@@ -39,12 +39,25 @@ body {
     margin: auto;
     min-height: 100px;
     min-width: 100px;
+
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
 header {
     background-color: #2ba6cb;
     padding: 22px 0;
     padding-left: 100px;
+
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+.nav-bar {
+
+
+    -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.3);
+    box-shadow: 0 0 5px rgba(0,0,0,0.3);
 }
 
 header h1 {

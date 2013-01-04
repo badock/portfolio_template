@@ -4,26 +4,27 @@
 <%
     cpt = 0
     img_id = 0
-    size_index_array      = [1,2,3,3]
-    size_array      = ['460x230', '230x230', '230x115']
-    height_array    = ['height3', 'height2', 'height1']
-    width_array     = ['width4', 'width2', 'width2']
+    size_index_array      = [0,1,2,0]
+
+    height_array    = [1, 2, 3]
+    width_array     = [1, 2, 3]
 %>
 
-<%= stylesheet_link_tag    "style", :media => "all" %>
+<%= stylesheet_link_tag    "jquery.gridster.css", :media => "all" %>
+<%= stylesheet_link_tag    "gridster_style.css", :media => "all" %>
 
-<h3>Réalisations</h3>
+<h3 xmlns="http://www.w3.org/1999/html">Réalisations</h3>
 
-<div id="container" class="variable-sizes">
-
+<div class="gridster">
+    <ul>
     <% @pictures.each do |picture| %>
-        <% index_size = size_index_array[cpt%4] %>
+        <% index = size_index_array[cpt%size_index_array.length] %>
 
-        <div class="element <%= width_array[index_size] %> <%= height_array[index_size] %>" data-symbol="I" data-category="halogen">
-            <div class="item_isotope item<%= index_size%>">
-                <%= image_tag(picture.url, :id => img_id, :onclick => "display_modal_picture('"+picture.url+"');", :class => "image", :size => size_array[index_size], :alt => "Edit Entry") %>
+        <li class="gridster-item" data-row="1" data-col="1" data-sizex="<%= width_array[index] %>" data-sizey="<%= height_array[index] %>">
+            <div class="gridster-item-border">
+                <%= image_tag(picture.url, :id => img_id, :onclick => "display_modal_picture('"+picture.url+"');", :class => "image", :alt => "Edit Entry") %>
             </div>
-        </div>
+        </li>
 
         <%
            cpt = cpt+1
@@ -32,55 +33,128 @@
 
     <% end %>
 
+        <% @pictures.each do |picture| %>
+            <% index = size_index_array[cpt%size_index_array.length] %>
 
-    <% @pictures.each do |picture| %>
-        <% index_size = size_index_array[cpt%4] %>
+            <li class="gridster-item" data-row="1" data-col="1" data-sizex="<%= width_array[index] %>" data-sizey="<%= height_array[index] %>">
+                <div class="gridster-item-border">
+                    <%= image_tag(picture.url, :id => img_id, :onclick => "display_modal_picture('"+picture.url+"');", :class => "image", :alt => "Edit Entry") %>
+                </div>
+            </li>
 
-        <div class="element <%= width_array[index_size] %> <%= height_array[index_size] %>" data-symbol="I" data-category="halogen">
-            <div class="item_isotope item<%= index_size%>">
-                <%= image_tag(picture.url, :id => img_id, :onclick => "display_modal_picture('"+picture.url+"');", :class => "image", :size => size_array[index_size], :alt => "Edit Entry") %>
-            </div>
-        </div>
+            <%
+               cpt = cpt+1
+               img_id = img_id+1
+            %>
 
-        <%
-           cpt = cpt+1
-           img_id = img_id+1
-        %>
-
-    <% end %>
-
-    <% @pictures.each do |picture| %>
-        <% index_size = size_index_array[cpt%4] %>
-
-        <div class="element <%= width_array[index_size] %> <%= height_array[index_size] %>" data-symbol="I" data-category="halogen">
-            <div class="item_isotope item<%= index_size%>">
-                <%= image_tag(picture.url, :id => img_id, :onclick => "display_modal_picture('"+picture.url+"');", :class => "image", :size => size_array[index_size], :alt => "Edit Entry") %>
-            </div>
-        </div>
-
-        <%
-           cpt = cpt+1
-           img_id = img_id+1
-        %>
-
-    <% end %>
+        <% end %>
+    </ul>
 </div>
 
-<%= javascript_include_tag "jquery.isotope.min" %>
+
+<%= javascript_include_tag "jquery.gridster.min.js" %>
 <%= javascript_include_tag "jquery.foundation.reveal" %>
 
-<script>
+<script type="text/javascript">
 
-    function initImageSize() {
-        var image_array = $(".image");
+    var gridster_innerhtml = "";
 
-        for(var i=0; i<image_array.size(); i++) {
+    $(function(){ //DOM Ready
 
-            var aspectRatio = image_array[i].naturalWidth/image_array[i].naturalHeight;
-            console.log(aspectRatio)
+        gridster_innerhtml = $(".gridster")[0].innerHTML;
+
+        refreshGridster();
+    });
+
+    var gridster_lock = false;
+
+    function fadeOutGridster(time) {
+        $(".gridster ul").fadeOut(time);
+    }
+
+    function fadeInGridster(time) {
+        $(".gridster ul").fadeIn(time);
+    }
+
+    function displayGridster(hidden, call_count, time) {
+
+        if(!time) {
+            time = 500;
         }
 
+        console.log("try:"+call_count+"?="+gridster_refresh_count);
+
+        if(hidden) {
+            fadeOutGridster(time+10);
+        }
+
+        setTimeout(function() {
+            if(hidden) {
+
+                if(call_count != gridster_refresh_count) {
+                    console.log("aborted "+call_count+"!="+gridster_refresh_count);
+                    return;
+                }
+
+
+                console.log("success "+call_count+"="+gridster_refresh_count);
+                console.log("resized");
+
+                $(".gridster")[0].innerHTML = gridster_innerhtml;
+
+
+                var base_dimension = 140;
+                var nb_col = Math.floor($($(".gridster")[0]).width()/(base_dimension+20));
+                var margin = ($($(".gridster")[0]).width() - nb_col * (base_dimension+20)) /2;
+                var corrected_base_dimension = Math.floor(base_dimension + 2*margin/nb_col);
+
+//                console.log(nb_col);
+                console.log(base_dimension);
+                console.log(corrected_base_dimension);
+//                console.log(margin);
+
+                //$($(".gridster")[0]).css("marginLeft", margin);
+
+                $(".gridster ul").gridster({
+                    widget_margins: [10, 10],
+                    min_cols: nb_col,
+                    max_size_x: nb_col,
+                    widget_base_dimensions: [corrected_base_dimension, corrected_base_dimension]
+                });
+
+                fadeInGridster(time);
+                concurrent_gridster_lock = false;
+            }
+        }, time);
     }
+
+    var gridster_refresh_count = 0;
+
+    function refreshGridster() {
+
+        if(gridster_refresh_count == 0) {
+            fadeOutGridster(10);
+
+        }
+
+        gridster_refresh_count++;
+
+        var call_count = gridster_refresh_count;
+
+
+        displayGridster(true, call_count);
+    }
+
+    var resize_lock = false;
+
+    $(window).resize(function() {
+
+        refreshGridster();
+        console.log("resize");
+    });
+</script>
+
+<script>
 
     function display_modal_picture(url) {
         $("#picture-modal")[0].innerHTML = "<img style=\"max-height: 100%; max-width: 100%; width: 500px;\" src="+url+"/>";
@@ -89,18 +163,6 @@
     }
 
     $(function(){
-
-        setTimeout(function() {
-            initImageSize();
-
-            var $container = $('#container');
-
-            $container.isotope({
-                itemSelector : '.element'
-            });
-        }, 100);
-
-
         setActiveNaveTab("#nav_pictures")
     });
 </script>
