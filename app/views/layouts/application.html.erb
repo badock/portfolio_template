@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RailsProject</title>
+
+    <!-- Included CSS Files, use foundation.css if you do not want minified code -->
+    <%= stylesheet_link_tag    "foundation", :media => "all" %>
+    <link rel="stylesheet" href="stylesheets/app.css">
+
+    <!-- Custom Modernizr for Foundation -->
+    <%= stylesheet_link_tag    "foundation", :media => "all" %>
+    <%= stylesheet_link_tag    "application", :media => "all" %>
+
+    <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tags %>
+
+    <script>
+        function setActiveNaveTab(name) {
+            $($(name)[0]).addClass("active")
+        }
+    </script>
+</head>
+<body>
+
+    <div id="box">
+        <header>
+            <h1>Portfolio de John Appleseed</h1>
+            <h4>Jardinier d'intérieur et d'extérieur</h4>
+        </header>
+
+        <div id="content">
+
+            <ul class="nav-bar">
+                <li id="nav_home"><a href="home">Acceuil</a></li>
+                <li id="nav_pictures"><a href="pictures">Photographies</a></li>
+                <li id="nav_contact"><a href="contact">Contact</a></li>
+            </ul>
+
+            <%= yield %>
+        </div>
+    </div>
+
+
+
+</body>
+</html>

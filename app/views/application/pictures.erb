@@ -1,0 +1,110 @@
+
+
+
+<%
+    cpt = 0
+    img_id = 0
+    size_index_array      = [1,2,3,3]
+    size_array      = ['460x230', '230x230', '230x115']
+    height_array    = ['height3', 'height2', 'height1']
+    width_array     = ['width4', 'width2', 'width2']
+%>
+
+<%= stylesheet_link_tag    "style", :media => "all" %>
+
+<h3>Réalisations</h3>
+
+<div id="container" class="variable-sizes">
+
+    <% @pictures.each do |picture| %>
+        <% index_size = size_index_array[cpt%4] %>
+
+        <div class="element <%= width_array[index_size] %> <%= height_array[index_size] %>" data-symbol="I" data-category="halogen">
+            <div class="item_isotope item<%= index_size%>">
+                <%= image_tag(picture.url, :id => img_id, :onclick => "display_modal_picture('"+picture.url+"');", :class => "image", :size => size_array[index_size], :alt => "Edit Entry") %>
+            </div>
+        </div>
+
+        <%
+           cpt = cpt+1
+           img_id = img_id+1
+        %>
+
+    <% end %>
+
+
+    <% @pictures.each do |picture| %>
+        <% index_size = size_index_array[cpt%4] %>
+
+        <div class="element <%= width_array[index_size] %> <%= height_array[index_size] %>" data-symbol="I" data-category="halogen">
+            <div class="item_isotope item<%= index_size%>">
+                <%= image_tag(picture.url, :id => img_id, :onclick => "display_modal_picture('"+picture.url+"');", :class => "image", :size => size_array[index_size], :alt => "Edit Entry") %>
+            </div>
+        </div>
+
+        <%
+           cpt = cpt+1
+           img_id = img_id+1
+        %>
+
+    <% end %>
+
+    <% @pictures.each do |picture| %>
+        <% index_size = size_index_array[cpt%4] %>
+
+        <div class="element <%= width_array[index_size] %> <%= height_array[index_size] %>" data-symbol="I" data-category="halogen">
+            <div class="item_isotope item<%= index_size%>">
+                <%= image_tag(picture.url, :id => img_id, :onclick => "display_modal_picture('"+picture.url+"');", :class => "image", :size => size_array[index_size], :alt => "Edit Entry") %>
+            </div>
+        </div>
+
+        <%
+           cpt = cpt+1
+           img_id = img_id+1
+        %>
+
+    <% end %>
+</div>
+
+<%= javascript_include_tag "jquery.isotope.min" %>
+<%= javascript_include_tag "jquery.foundation.reveal" %>
+
+<script>
+
+    function initImageSize() {
+        var image_array = $(".image");
+
+        for(var i=0; i<image_array.size(); i++) {
+
+            var aspectRatio = image_array[i].naturalWidth/image_array[i].naturalHeight;
+            console.log(aspectRatio)
+        }
+
+    }
+
+    function display_modal_picture(url) {
+        $("#picture-modal")[0].innerHTML = "<img style=\"max-height: 100%; max-width: 100%; width: 500px;\" src="+url+"/>";
+        $("#picture-modal").reveal();
+
+    }
+
+    $(function(){
+
+        setTimeout(function() {
+            initImageSize();
+
+            var $container = $('#container');
+
+            $container.isotope({
+                itemSelector : '.element'
+            });
+        }, 100);
+
+
+        setActiveNaveTab("#nav_pictures")
+    });
+</script>
+
+<div id="picture-modal" class="reveal-modal">
+    The picture modal.
+</div>
