@@ -41,6 +41,10 @@ body {
     min-width: 100px;
 }
 
+#container {
+    display: inline-block;
+}
+
 header {
     background-color: #2ba6cb;
     padding: 22px 0;
